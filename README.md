@@ -26,7 +26,7 @@ This project demonstrates how modern browsers can establish direct media channel
 - Signaling	Node.js + Express + Socket.io
 - Communication	Peer-to-Peer (P2P)
 
-🤝 Contributing
+## Contributing
 
 Contributions, issues, and feature requests are welcome.
 Please open a discussion or submit a pull request.
