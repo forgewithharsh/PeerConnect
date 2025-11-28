@@ -4,17 +4,16 @@ import { createServer } from "node:http";
 import { Server } from "socket.io";
 
 import mongoose from "mongoose";
+import { connectToSocket } from "./controllers/socketManager.js";
 
 import cors from "cors";
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = connectToSocket(server);
 
 app.set("port", process.env.PORT || 8000);
-app.get("/home", (req, res) => {
-  return res.json({ hello: "world" });
-});
+app.use(cors())
 
 const start = async () => {
   const connectionDb = await mongoose.connect(
