@@ -1,0 +1,8 @@
+.landingPageContainer {
+  width: 100vw;
+  height: 100vh;
+  background: url("../public/background.png");
+  background-color: no-repeat;
+  background-size: cover;
+  color: white;
+}
