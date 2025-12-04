@@ -46,7 +46,11 @@ export default function Authentication() {
         let result = await handleRegister(name, username, password);
         console.log(result);
         setMessage(result);
+        setUsername("");
         setOpen(true);
+        setError("");
+        setFormState(0);
+        setPassword("");
       }
     } catch (err) {
       let message = err.response.data.message;
@@ -197,6 +201,7 @@ export default function Authentication() {
                   fullWidth
                   label="Full Name"
                   name="fullname"
+                  value={fullname}
                   onChange={(e) => setName(e.target.value)}
                 />
               ) : (
@@ -209,6 +214,7 @@ export default function Authentication() {
                 fullWidth
                 label="Username"
                 name="username"
+                value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
               <TextField
@@ -217,6 +223,7 @@ export default function Authentication() {
                 fullWidth
                 label="Password"
                 type="password"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
 
