@@ -1,5 +1,7 @@
 import React, { useRef, useState } from "react";
 
+import "../styles/videoComponent.css"
+
 const server_url = "http://localhost:8000";
 
 var connections = {};
@@ -48,7 +50,7 @@ export default function VideoMeetComponent() {
 
   return <div>
     {askForUsername === true} ? <div>
-      
+
       </div> : <></>
   </div>;
 }
