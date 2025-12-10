@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import io from "socket.io-client";
 
 import "../styles/videoComponent.css";
 import TextField from "@mui/material/TextField";
@@ -144,6 +145,11 @@ export default function VideoMeetComponent() {
 
           // BlackSilence
 
+          let blackSlience = (...args) =>
+            new MediaStream([black(...args), silence()]);
+          window.localStream = blackSlience();
+          localVideoRef.current.srcObject = window.localStream;
+
           for (let id in connections) {
             connections[id].addStream(window.localStream);
             connections[id].createOffer().then((description) => {
@@ -174,7 +180,16 @@ export default function VideoMeetComponent() {
     return Object.assign(dst.stream.getAudioTracks()[0], { enabled: false });
   };
 
-  let black =
+  let black = ({ width = 640, height = 480 } = {}) => {
+    let canvas = Object.assign(document.createElement("canvas"), {
+      width,
+      height,
+    });
+
+    canvas.getContext("2d").fillRect(0, 0, width, height);
+    let stream = canvas.captureStream();
+    return Object.assign(stream.getVideoTracks()[0], { enabled: false });
+  };
 
   let getUserMedia = () => {
     if ((video && videoAvailable) || (audio && audioAvailable)) {
@@ -214,7 +229,7 @@ export default function VideoMeetComponent() {
                   connections[fromId]
                     .setLocalDescription(description)
                     .then(() => {
-                      socketIdRef.current.emit(
+                      socketRef.current.emit(
                         "signal",
                         fromId,
                         JSON.stringify({
@@ -254,7 +269,7 @@ export default function VideoMeetComponent() {
       socketRef.current.on("chat-message", addMessage);
 
       socketRef.current.on("user-left", (id) => {
-        setVideo((videos) => videos.filter((video) => video.socketId !== id));
+        setVideos((videos) => videos.filter((video) => video.socketId !== id));
       });
 
       socketRef.current.on("user-joined", (id, clients) => {
@@ -308,7 +323,12 @@ export default function VideoMeetComponent() {
           if (window.localStream !== undefined && window.localStream !== null) {
             connections[socketListId].addStream(window.localStream);
           } else {
-            // let blackSlience
+            // BlackSilence
+
+            let blackSlience = (...args) =>
+              new MediaStream([black(...args), silence()]);
+            window.localStream = blackSlience();
+            connections[socketListId].addStream(window.localStream);
           }
         });
 
@@ -373,7 +393,25 @@ export default function VideoMeetComponent() {
           </div>
         </div>
       ) : (
-        <></>
+        <div className="meetVideoContainer">
+          <video ref={localVideoRef} autoPlay muted></video>
+
+          {videos.map((video) => (
+            <div key={video.socketId}>
+              <h2>{video.socketId}</h2>
+
+              <video
+                data-socket={video.socketId}
+                ref={(ref) => {
+                  if (ref && video.stream) {
+                    ref.srcObject = video.stream;
+                  }
+                }}
+                autoPlay
+              ></video>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

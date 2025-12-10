@@ -24,7 +24,7 @@ export const connectToSocket = (server) => {
       timeOnline[socket.id] = new Date();
 
       for (let a = 0; a < connections[path].length; a++) {
-        to.to(connections[path][a]).emit(
+        io.to(connections[path][a]).emit(
           "user-joined",
           socket.id,
           connections[path]
@@ -33,9 +33,12 @@ export const connectToSocket = (server) => {
 
       if (messages[path] !== undefined) {
         for (let a = 0; a < messages[path].length; a++) {
-          io.to(socket.id).emit("chat-message", messages[path][a]["data"]),
+          io.to(socket.id).emit(
+            "chat-message",
+            messages[path][a]["data"],
             messages[path][a]["sender"],
-            messages[path][a]["socket-id-sender"];
+            messages[path][a]["socket-id-sender"]
+          );
         }
       }
     });
@@ -51,7 +54,7 @@ export const connectToSocket = (server) => {
             return [roomKey, true];
           }
 
-          retrun[(room, isFound)];
+          return [room, isFound];
         },
         ["", false]
       );
@@ -66,7 +69,7 @@ export const connectToSocket = (server) => {
           data: data,
           "socket-id-sender": socket.id,
         });
-        console.log("message", key, ":", sender, data);
+        console.log("message", matchingRoom, ":", sender, data);
 
         connections[matchingRoom].forEach((elem) => {
           io.to(elem).emit("chat-message", data, sender, socket.id);
@@ -85,18 +88,18 @@ export const connectToSocket = (server) => {
         for (let a = 0; a < v.length; ++a) {
           if (v[a] === socket.id) {
             key = k;
-          }
 
-          for (let a = 0; a < connections[key].length; ++a) {
-            io.to(connections[key][a]).emit("user-left", socket.id);
-          }
+            for (let a = 0; a < connections[key].length; ++a) {
+              io.to(connections[key][a]).emit("user-left", socket.id);
+            }
 
-          var index = connections[key].indexOf(socket.id);
+            var index = connections[key].indexOf(socket.id);
 
-          connections[key].splice(index, 1);
+            connections[key].splice(index, 1);
 
-          if (connections[key].length === 0) {
-            delete connections[key];
+            if (connections[key].length === 0) {
+              delete connections[key];
+            }
           }
         }
       }
