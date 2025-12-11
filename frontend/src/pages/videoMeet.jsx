@@ -1,9 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 
-import "../styles/videoComponent.css";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import VideocamOffIcon from "@mui/icons-material/VideocamOff";
+
+import styles from "../styles/videoComponent.module.css";
+import IconButton from "@mui/material/IconButton";
+import CallEndIcon from "@mui/icons-material/CallEnd";
+import MicIcon from "@mui/icons-material/Mic";
+import MicOffIcon from "@mui/icons-material/MicOff";
+import ScreenShareIcon from "@mui/icons-material/ScreenShare";
+import StopScreenShareIcon from "@mui/icons-material/StopScreenShare";
+import Badge from "@mui/material/Badge";
+import ChatIcon from "@mui/icons-material/Chat";
 
 const server_url = "http://localhost:8000";
 
@@ -23,9 +34,9 @@ export default function VideoMeetComponent() {
 
   let [audioAvailable, setAudioAvailable] = useState(true);
 
-  let [video, setVideo] = useState([]);
+  let [video, setVideo] = useState(true);
 
-  let [audio, setAudio] = useState();
+  let [audio, setAudio] = useState(true);
 
   let [screen, setScreen] = useState();
 
@@ -81,8 +92,8 @@ export default function VideoMeetComponent() {
 
       if (videoAvailable || audioAvailable) {
         const userMediaStream = await navigator.mediaDevices.getUserMedia({
-          video: videoAvailable,
-          audio: audioAvailable,
+          video: true,
+          audio: true,
         });
 
         if (userMediaStream) {
@@ -103,7 +114,9 @@ export default function VideoMeetComponent() {
 
   let getUserMediaSuccess = (stream) => {
     try {
-      window.localStream.getTracks().forEach((track) => track.stop());
+      if (window.localStream) {
+        window.localStream.getTracks().forEach((track) => track.stop());
+      }
     } catch (e) {
       console.log(e);
     }
@@ -195,7 +208,6 @@ export default function VideoMeetComponent() {
     if ((video && videoAvailable) || (audio && audioAvailable)) {
       navigator.mediaDevices
         .getUserMedia({ video: video, audio: audio })
-        .then(() => {})
         .then(getUserMediaSuccess)
         .catch((err) => console.log(err));
     } else {
@@ -362,8 +374,8 @@ export default function VideoMeetComponent() {
   };
 
   let getMedia = () => {
-    setVideo(setVideoAvailable);
-    setAudio(setAudioAvailable);
+    setVideo(videoAvailable);
+    setAudio(audioAvailable);
     connectToSocketServer();
   };
 
@@ -393,11 +405,46 @@ export default function VideoMeetComponent() {
           </div>
         </div>
       ) : (
-        <div className="meetVideoContainer">
-          <video ref={localVideoRef} autoPlay muted></video>
+        <div className={styles.meetVideoContainer}>
+          <div className={styles.buttonContainers}>
+            <IconButton style={{ color: "white" }}>
+              {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
+            </IconButton>
+            <IconButton style={{ color: "red" }}>
+              <CallEndIcon />
+            </IconButton>
+            <IconButton style={{ color: "white" }}>
+              {audio === true ? <MicIcon /> : <MicOffIcon />}
+            </IconButton>
+
+            {screenAvailable === true ? (
+              <IconButton style={{ color: "white" }}>
+                {screen === true ? (
+                  <ScreenShareIcon />
+                ) : (
+                  <StopScreenShareIcon />
+                )}
+              </IconButton>
+            ) : (
+              <></>
+            )}
+
+            <Badge badgeContent={newMessages}>
+              <IconButton style={{ color: "white" }}>
+                <ChatIcon />
+              </IconButton>
+            </Badge>
+          </div>
+
+          <video
+            className={styles.meetUserVideo}
+            ref={localVideoRef}
+            autoPlay
+            muted
+          ></video>
 
           {videos.map((video) => (
-            <div key={video.socketId}>
+            <div className={styles.conferenceView} key={video.socketId}>
               <h2>{video.socketId}</h2>
 
               <video
