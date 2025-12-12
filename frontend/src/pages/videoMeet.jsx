@@ -264,7 +264,7 @@ export default function VideoMeetComponent() {
     }
   };
 
-  let addMessage = () => {
+  let addMessage = (data, sender, socketIdSender) => {
     
   };
 
