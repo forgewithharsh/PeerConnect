@@ -265,7 +265,14 @@ export default function VideoMeetComponent() {
   };
 
   let addMessage = (data, sender, socketIdSender) => {
-    
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { sender: sender, data: data },
+    ]);
+
+    if (socketIdSender !== socketIdRef.current) {
+      setNewMessages((prevMessages) => prevMessages + 1);
+    }
   };
 
   let connectToSocketServer = () => {
@@ -381,6 +388,8 @@ export default function VideoMeetComponent() {
     connectToSocketServer();
   };
 
+  let routeTo = useNavigate();
+
   let connect = () => {
     setAskForUsername(false);
     getMedia();
@@ -470,6 +479,15 @@ export default function VideoMeetComponent() {
     setMessage("");
   };
 
+  let handleEndCall = () => {
+    try {
+      let tracks = localVideoRef.current.srcObject.getTracks();
+      tracks.forEach((track) => track.stop());
+    } catch (e) {
+      routeTo("/home");
+    }
+  };
+
   return (
     <div>
       {askForUsername === true ? (
@@ -497,6 +515,21 @@ export default function VideoMeetComponent() {
               <div className={styles.chatContainer}>
                 <h1>Chat</h1>
 
+                <div className={styles.chattingDisplay}>
+                  {messages.length > 0 ? (
+                    messages.map((item, index) => {
+                      return (
+                        <div style={{ marginButton: "20px" }} key={index}>
+                          <p style={{ fontWeight: "bold" }}>{item.sender}</p>
+                          <p>{item.data}</p>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p>No Messages Yet</p>
+                  )}
+                </div>
+
                 <div className={styles.chattingArea}>
                   <TextField
                     value={message}
@@ -519,7 +552,7 @@ export default function VideoMeetComponent() {
             <IconButton onClick={handleVideo} style={{ color: "white" }}>
               {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
             </IconButton>
-            <IconButton style={{ color: "red" }}>
+            <IconButton onClick={handleEndCall} style={{ color: "red" }}>
               <CallEndIcon />
             </IconButton>
             <IconButton onClick={handleAudio} style={{ color: "white" }}>
