@@ -27,9 +27,9 @@ const defaultTheme = createTheme({
 });
 
 export default function Authentication() {
-  const [username, setUsername] = React.useState();
-  const [password, setPassword] = React.useState();
-  const [name, setName] = React.useState();
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [name, setName] = React.useState("");
   const [error, setError] = React.useState();
   const [message, setMessage] = React.useState();
 
@@ -38,9 +38,13 @@ export default function Authentication() {
 
   const { handleRegister, handleLogin } = React.useContext(AuthContext);
 
+
   let handleAuth = async () => {
     try {
       if (formState === 0) {
+        let result = await handleLogin(username, password);
+        console.log("Login result:", result);
+        localStorage.setItem("token", result.token);
       }
       if (formState === 1) {
         let result = await handleRegister(name, username, password);

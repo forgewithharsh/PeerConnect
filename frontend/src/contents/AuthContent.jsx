@@ -3,7 +3,6 @@ import axios from "axios";
 import httpStatus from "http-status";
 import { useNavigate } from "react-router-dom";
 
-
 export const AuthContext = createContext({});
 
 const client = axios.create({
@@ -40,14 +39,13 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (request.status === httpStatus.OK) {
-        localStorage.setItem("token", request, data.token);
+        localStorage.setItem("token", request.data.token);
+        router("/home");
       }
-    } catch (error) {
-      throw error;
+    } catch (err) {
+      throw err;
     }
   };
-
-  
 
   const data = {
     userData,

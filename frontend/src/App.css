@@ -46,7 +46,7 @@
   margin-top: 1.9rem;
 }
 
-.landingMainContainer > div:nth-child(1) div[role="button"] a{
+.landingMainContainer > div:nth-child(1) div[role="button"] a {
   text-decoration: none;
   color: white;
   font-size: 1.7rem;
@@ -85,4 +85,37 @@
     opacity: 1;
     transform: scale(1);
   }
+}
+
+.navBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 20px;
+  text-align: center;
+}
+
+.meetContainer {
+  display: flex;
+  padding-inline: 20px;
+  height: 80vh;
+  gap: 10vw;
+  justify-content: center;
+}
+
+.leftPanel {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.rightPanel {
+  display: flex;
+  align-items: center;
+}
+
+.rightPanel > img {
+  width: 22vw;
+  height: auto;
+  border-radius: 20px;
 }

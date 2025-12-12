@@ -47,7 +47,7 @@ export default function VideoMeetComponent() {
 
   let [messages, setMessages] = useState([]);
 
-  let [message, setMessage] = useState();
+  let [message, setMessage] = useState("");
 
   let [newMessages, setNewMessages] = useState(3);
 
@@ -534,14 +534,14 @@ export default function VideoMeetComponent() {
                 <div className={styles.chattingArea}>
                   <TextField
                     value={message}
-                    onClick={(e) => setMessage(e.target.value)}
+                    onChange={(e) => setMessage(e.target.value)}
                     id="outlined-basic"
                     label="Enter Your Chat"
                     variant="outlined"
                   />
-                  <button variant="contained" onClick={sendMessage}>
+                  <Button variant="contained" onClick={sendMessage}>
                     Send
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

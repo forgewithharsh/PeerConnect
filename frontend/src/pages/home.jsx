@@ -1,12 +1,70 @@
-import React from 'react'
-import withAuth from '../utils/withAuth'
+import React, { useState } from "react";
+import withAuth from "../utils/withAuth";
+import { useNavigate } from "react-router-dom";
+import "../App.css";
+import IconButton from "@mui/material/IconButton";
+import RestoreIcon from "@mui/icons-material/Restore";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 
 function HomeComponent() {
+  let navigate = useNavigate();
+  const [meetingCode, setMeetingCode] = useState("");
+
+  let handleJoinVideoCall = async () => {
+    navigate(`/${meetingCode}`);
+  };
+
   return (
-    <div>
-      
-    </div>
-  )
+    <>
+      <div className="navBar">
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <h2>PeerConnect</h2>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <IconButton>
+            <RestoreIcon />
+          </IconButton>
+          <p>History</p>
+          <Button
+            onClick={() => {
+              localStorage.removeItem("token");
+              navigate("/auth");
+            }}
+          >
+            Logout
+          </Button>
+        </div>
+      </div>
+
+      <div className="meetContainer">
+        <div className="leftPanel">
+          <div>
+            <h2>
+              Experience video calls as smooth and clear as a perfect cup of
+              chai, quality you can see and hear.
+            </h2>
+
+            <div style={{ display: "flex", gap: "10px" }}>
+              <TextField
+                onChange={(e) => setMeetingCode(e.target.value)}
+                id="outlined-basic"
+                label="Meeting Code"
+                variant="outlined"
+              />
+              <Button onClick={handleJoinVideoCall} variant="contained">
+                Join
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className="rightPanel">
+          <img srcSet="home2.png" alt="" />
+        </div>
+      </div>
+    </>
+  );
 }
 
-export default withAuth(HomeComponent)
+export default withAuth(HomeComponent);
