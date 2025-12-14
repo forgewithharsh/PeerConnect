@@ -9,10 +9,28 @@ function LandingPage() {
           <h2>PeerConnect</h2>
         </div>
         <div className="navlist">
-          <p>Join as Guest</p>
-          <p>Register</p>
+          <p
+            onClick={() => {
+              window.location.href = "/harsh";
+            }}
+          >
+            Join as Guest
+          </p>
+          <p
+            onClick={() => {
+              window.location.href = "/auth";
+            }}
+          >
+            Register
+          </p>
           <div role="button">
-            <p>Login</p>
+            <p
+              onClick={() => {
+                window.location.href = "/auth";
+              }}
+            >
+              Login
+            </p>
           </div>
         </div>
       </nav>
