@@ -47,25 +47,29 @@ function History() {
       >
         <HomeIcon />
       </IconButton>
-      {meetings.map((e, i) => {
-        return (
-          <>
-            <Card key={i} varient="outlined">
-              <CardContent>
-                <Typography
-                  gutterBottom
-                  sx={{ color: "text.secondary", fontSize: 14 }}
-                >
-                  Code: {e.meetingCode}
-                </Typography>
-                <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-                  Date: {formatDate(e.date)}
-                </Typography>
-              </CardContent>
-            </Card>
-          </>
-        );
-      })}
+      {meetings.length !== 0 ? (
+        meetings.map((e, i) => {
+          return (
+            <>
+              <Card key={i} varient="outlined">
+                <CardContent>
+                  <Typography
+                    gutterBottom
+                    sx={{ color: "text.secondary", fontSize: 14 }}
+                  >
+                    Code: {e.meetingCode}
+                  </Typography>
+                  <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
+                    Date: {formatDate(e.date)}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </>
+          );
+        })
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
