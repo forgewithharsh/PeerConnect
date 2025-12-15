@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/peer1.jpeg" alt="PeerConnect Banner" width="800">
+</p>
+
 # PeerConnect: Peer-to-Peer Video Calling (WebRTC)
 
 PeerConnect is a lightweight and secure real-time video calling application built using WebRTC and peer-to-peer (P2P) communication.
